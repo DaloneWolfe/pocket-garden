@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#c9e4ef" />
+    <meta name="description" content="A cozy little garden that grows while you do other things." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Pocket Garden" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Pocket Garden</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="sky" aria-hidden="true">
+      <div class="sun"></div>
+      <div class="cloud cloud-a"></div>
+      <div class="cloud cloud-b"></div>
+      <div class="bee"></div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="40" height="40">
+            <circle cx="24" cy="24" r="22" fill="#e8dcc4" />
+            <path d="M24 26c0-5 5.4-6.5 5.4-12.2A5.4 5.4 0 1 0 18.6 13.8C18.6 19.5 24 21 24 26z" fill="#3f6b4e" />
+            <circle cx="24" cy="11.2" r="3.3" fill="#e8a0b8" />
+            <path d="M15.5 27h17l-2.3 11.5H17.8z" fill="#c46b4a" />
+            <ellipse cx="24" cy="27.2" rx="9.4" ry="2.1" fill="#a85a3e" />
+          </svg>
+        </span>
+        <div>
+          <h1>Pocket Garden</h1>
+          <p class="tagline" id="garden-age">A quiet patch of earth</p>
+        </div>
+      </div>
+      <div class="pills">
+        <div class="pill" id="coin-display" aria-live="polite">
+          <span class="pill-icon" aria-hidden="true">◉</span>
+          <span id="coin-count">0</span>
+          <span class="sr-only">coins</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <p class="away-note" id="away-note" hidden></p>
+      <section class="garden" aria-label="Your garden">
+        <div class="bed" id="plots"></div>
+      </section>
+    </main>
+
+    <nav class="dock" aria-label="Garden actions">
+      <button type="button" class="dock-btn" id="btn-water" aria-pressed="false">
+        <span class="dock-icon" id="can-icon" aria-hidden="true"></span>
+        <span id="water-label">Water</span>
+      </button>
+      <button type="button" class="dock-btn" id="btn-shop">
+        <span class="dock-icon shop-icon" aria-hidden="true"></span>
+        Shop
+      </button>
+      <button type="button" class="dock-btn" id="btn-tip">
+        <span class="dock-icon tip-icon" aria-hidden="true"></span>
+        Tip jar
+      </button>
+      <button type="button" class="dock-btn" id="btn-help">
+        <span class="dock-icon help-icon" aria-hidden="true"></span>
+        How to
+      </button>
+    </nav>
+
+    <dialog class="sheet" id="plant-sheet" aria-labelledby="plant-sheet-title">
+      <form method="dialog" class="sheet-inner">
+        <header class="sheet-head">
+          <h2 id="plant-sheet-title">Plant a seed</h2>
+          <button type="submit" class="icon-close" aria-label="Close">×</button>
+        </header>
+        <div class="sheet-body" id="plant-list"></div>
+      </form>
+    </dialog>
+
+    <dialog class="sheet" id="shop-sheet" aria-labelledby="shop-sheet-title">
+      <form method="dialog" class="sheet-inner">
+        <header class="sheet-head">
+          <h2 id="shop-sheet-title">Seed shop</h2>
+          <button type="submit" class="icon-close" aria-label="Close">×</button>
+        </header>
+        <div class="sheet-body" id="shop-body"></div>
+      </form>
+    </dialog>
+
+    <dialog class="sheet" id="tip-sheet" aria-labelledby="tip-sheet-title">
+      <form method="dialog" class="sheet-inner" id="tip-form">
+        <header class="sheet-head">
+          <h2 id="tip-sheet-title">Tip jar</h2>
+          <button type="submit" class="icon-close" aria-label="Close">×</button>
+        </header>
+        <div class="sheet-body">
+          <p class="lede">
+            If this little garden made a quiet moment nicer, you can leave a tip.
+            Payments go through Stripe Checkout — card details never touch this site.
+          </p>
+          <p class="notice" id="tip-notice" hidden></p>
+          <div class="tip-amounts" id="tip-amounts">
+            <button type="button" class="amount" data-cents="100">$1</button>
+            <button type="button" class="amount" data-cents="300">$3</button>
+            <button type="button" class="amount" data-cents="500">$5</button>
+          </div>
+          <label class="custom-label" for="custom-tip">Or a custom amount (USD)</label>
+          <div class="custom-row">
+            <span class="prefix">$</span>
+            <input
+              id="custom-tip"
+              name="custom"
+              type="number"
+              min="1"
+              max="100"
+              step="1"
+              inputmode="numeric"
+              placeholder="8"
+            />
+            <button type="button" class="amount" id="btn-custom-tip">Tip</button>
+          </div>
+          <p class="fine" id="tip-status"></p>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="sheet" id="help-sheet" aria-labelledby="help-sheet-title">
+      <form method="dialog" class="sheet-inner">
+        <header class="sheet-head">
+          <h2 id="help-sheet-title">How to play</h2>
+          <button type="submit" class="icon-close" aria-label="Close">×</button>
+        </header>
+        <div class="sheet-body prose">
+          <p>
+            Pocket Garden is meant to sit quietly beside whatever else you are doing.
+            Plant a seed, wander off, and come back later — your plants keep growing
+            in real time, even if you close the tab.
+          </p>
+          <ul>
+            <li>Tap an empty plot to plant a seed.</li>
+            <li>Tap <strong>Water</strong>, then a growing plant, to shave a little time off its wait. Each plant can be watered once.</li>
+            <li>Harvest when a plant is ready to earn coins.</li>
+            <li>Spend coins in the shop to unlock new plants and extra plots.</li>
+          </ul>
+          <p>
+            Your garden is saved on this device. The tip jar is optional and does not
+            change the game, aside from a small thank-you cosmetic if a payment goes through.
+          </p>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="/game.js" defer></script>
+  </body>
+</html>

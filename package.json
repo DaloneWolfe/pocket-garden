@@ -1,0 +1,23 @@
+{
+  "name": "pocket-garden",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A cozy idle garden that grows in real time, with an optional Stripe tip jar.",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node scripts/verify.mjs"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "18.0.10",
+    "express": "5.3.0",
+    "express-rate-limit": "8.7.5",
+    "helmet": "8.3.0",
+    "stripe": "23.2.0"
+  }
+}
